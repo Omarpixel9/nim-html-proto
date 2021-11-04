@@ -2,7 +2,7 @@ const pile_container = document.querySelector('#pieces-container');
 const button_container = document.querySelector('#buttons-container');
 const turnLabel = document.querySelector('#turn-label');
 const piecesLabel = document.querySelector('#pieces-label');
-let numberOfPieces = 30;
+let numberOfPieces = 15;
 
 function playCPURound() {
     turnLabel.textContent = 'Please wait, it is AI\'s turn!'
@@ -22,7 +22,7 @@ function playCPURound() {
         } else {
             endGame('Player');
         }
-    }, 1000);
+    }, 500);
 
 
 }
