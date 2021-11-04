@@ -1,0 +1,48 @@
+:root {
+    --pieceSize: clamp(20px, 60px, 80px);
+}
+
+body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+h1 {
+    /* font-size: 48px; */
+}
+
+#pieces-container {
+    display: flex;
+    width: 80vw;
+    height: 250px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    /* grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr); */
+    gap: 10px;
+}
+
+#pieces-container .piece {
+    width: var(--pieceSize);
+    height: var(--pieceSize);
+    background: cornflowerblue;
+    border-radius: 100%;
+    box-shadow: 2px 2px 2px black;
+}
+
+#turn-label {
+    margin-top: 50px;
+}
+
+#buttons-container {
+    
+}
+
+#buttons-container button {
+    width: 80px;
+    height: 50px;
+    margin: 10px;
+    font-size: 32px;
+}
