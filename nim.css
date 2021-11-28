@@ -51,3 +51,8 @@ button {
     width: 200px;
     margin-top: 25px;
 }
+
+.clicked {
+    background-color: black;
+    color: white;
+}

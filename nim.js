@@ -3,6 +3,7 @@ const button_container = document.querySelector('#buttons-container');
 const turnLabel = document.querySelector('#turn-label');
 const piecesLabel = document.querySelector('#pieces-label');
 let numberOfPieces = 15;
+let firstTurn = 'user'; // "user" vs "AI"
 
 function playCPURound() {
     turnLabel.textContent = 'Please wait, it is AI\'s turn!'
@@ -56,46 +57,6 @@ function switchTurn(turn) {
         turnLabel.textContent = 'Please wait, it is AI\'s turn!'
         buttons.forEach(button => button.disabled = true);
     }
-}
-
-// Convention: Whoever takes the last piece loses
-function game(numberOfObjectsInPile) {
-    let isUserTurn = true;
-    let objects = numberOfObjectsInPile;
-
-    function takeObjectsFromPile() {
-        if (isUserTurn) // let user insert input
-            return prompt(`${objects} pieces remain.\nEnter how many to take: `);
-        else { // let CPU take
-            let taken;
-            do {
-                taken = Math.floor(Math.random() * 10 / 2);
-            } while (taken > objects || taken > 3 || taken < 1);
-
-            alert(`CPU Player took ${taken} pieces`);
-            return taken;
-        }
-    }
-
-    while (objects != 0) {
-        // playerTurn = playerTurn == 1 ? 2 : 1; // change turn
-        let taken = takeObjectsFromPile()
-        while (taken > objects || taken > 3 || taken < 1) {
-            alert("Invalid entered value. Make sure you only take 1, 2, or 3.");
-            taken = takeObjectsFromPile();
-        }
-        objects -= taken; // decrement taken
-        visualizePile(objects);
-
-        isUserTurn = !isUserTurn;
-
-    }
-    if (isUserTurn) {
-        alert('User Player wins!');
-    } else {
-        alert('AI wins.');
-    }
-
 }
 
 function clearPile() {
@@ -161,8 +122,25 @@ function mainMenu() {
     turnLabel.style.display = 'none';
     buttons = Array.from(document.querySelectorAll('#buttons-container'));
     buttons.forEach(button => button.style.display = 'none');
+}
 
+function startGame() {
+    // Show game related elements
+    pile_container.style.display = 'flex';
+    piecesLabel.style.display = 'inline';
+    turnLabel.style.display = 'inline';
+    buttons = Array.from(document.querySelectorAll('#buttons-container'));
+    buttons.forEach(button => button.style.display = 'block');
 
+    // Hide main menu elements
+    (document.querySelector('#main-menu')).style.display = 'none';
+
+    updatePiecesCounter(numberOfPieces);
+    visualizePile(numberOfPieces);
+    addEventListenersToButtons();
+
+    switchTurn(firstTurn);
+    if (firstTurn !== 'user') playCPURound();
 }
 // Prompt user whether to start the game or the AI to start
 function promptUserBeginning() {
@@ -171,9 +149,26 @@ function promptUserBeginning() {
 
 mainMenu();
 
-if(false) {
-    updatePiecesCounter(numberOfPieces);
-    visualizePile(numberOfPieces);
-    addEventListenersToButtons();
-}
+player1_button = document.querySelector('#player1');
+player1_button.addEventListener('click', function () {
+    player1_button.classList.add('clicked');
+    AI_button.classList.remove('clicked');
+    firstTurn = 'user';
+    console.log(firstTurn);
+    start_button.disabled = false;
+    switchTurn(firstTurn);
+});
+
+AI_button = document.querySelector('#AI');
+AI_button.addEventListener('click', function () {
+    AI_button.classList.add('clicked');
+    player1_button.classList.remove('clicked');
+    firstTurn = 'AI';
+    console.log(firstTurn);
+    start_button.disabled = false;
+});
+
+start_button = document.querySelector('#startGame');
+start_button.addEventListener('click', startGame);
+start_button.disabled = true;
 // game(numberOfPieces);
