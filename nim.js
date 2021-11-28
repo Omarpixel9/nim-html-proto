@@ -155,7 +155,25 @@ function addEventListenersToButtons() {
     });
 }
 
-updatePiecesCounter(numberOfPieces);
-visualizePile(numberOfPieces);
-addEventListenersToButtons();
+function mainMenu() {
+    pile_container.style.display = 'none';
+    piecesLabel.style.display = 'none';
+    turnLabel.style.display = 'none';
+    buttons = Array.from(document.querySelectorAll('#buttons-container'));
+    buttons.forEach(button => button.style.display = 'none');
+
+
+}
+// Prompt user whether to start the game or the AI to start
+function promptUserBeginning() {
+    
+}
+
+mainMenu();
+
+if(false) {
+    updatePiecesCounter(numberOfPieces);
+    visualizePile(numberOfPieces);
+    addEventListenersToButtons();
+}
 // game(numberOfPieces);
