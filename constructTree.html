@@ -18,8 +18,8 @@
     
 // Constructing a tree
 // Create root node and first children
-
-let root = tree.parse({value: 5, cost:0, level: 0, children:[{value: 2, cost:0, level: 0}, {value: 3, cost:0, level: 0}, {value: 4, cost: 0, level: 0}]});
+let numOfPieces = 15;
+let root = tree.parse({value: numOfPieces, cost:0, level: 0, children:[{value: numOfPieces-3, cost:0, level: 0}, {value: numOfPieces-2, cost:0, level: 0}, {value: numOfPieces-3, cost: 0, level: 0}]});
 
 // Traverse tree for each node and create its children
 root.walk(function (node) {
