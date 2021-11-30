@@ -18,8 +18,11 @@ let tree = new TreeModel();
     
     // Constructing a tree
     // Create root node and first children
-    let numOfPieces = 15;
+    let numOfPieces = 5;
     let idCounter = 0;
+
+    let initialTime = (new Date()).getTime() / 1000;
+    console.log((new Date()).getTime() / 1000 - initialTime);
     let root = tree.parse({value: numOfPieces, cost:0, level: 0, id: ++idCounter, children:[{value: numOfPieces-3, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-2, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-1, cost: 0, level: 0, id: ++idCounter}]});
     
     for (let i = 2; i <= idCounter; i++) {
@@ -38,6 +41,9 @@ let tree = new TreeModel();
             }
     }
     // Traverse tree for each node and create its children    
+    
+    console.log((new Date()).getTime() / 1000 - initialTime);
+
     
     let lvl = 1;
     let temp = 0;
@@ -62,10 +68,19 @@ let tree = new TreeModel();
         
     }
 
+    console.log((new Date()).getTime() / 1000 - initialTime);
+
+    let treeArray = [];
+    for (let i = 1; i <= idCounter; i++) {
+        let node = root.first(node => node.model.id === i);
+        treeArray.push(node);
+    }
+    console.log(treeArray);
+
     lvl = lvl - 1;
     while( lvl >= 1 ){
         for (let i = 1; i <= idCounter; i++) {
-        let node = root.first(node => node.model.id === i);
+        let node = treeArray[i - 1];
         let hasChildren = typeof node.model.children !== "undefined";
 
         if( node.model.level == lvl ){
@@ -97,6 +112,9 @@ let tree = new TreeModel();
     }
     lvl = lvl - 1;
 }
+
+console.log((new Date()).getTime() / 1000 - initialTime);
+
     
     // root.walk({strategy: 'breadth'}, function (node) {
         
@@ -154,11 +172,11 @@ let tree = new TreeModel();
     // });
 
     let counter = 0;
-    // for (let i = 1; i <= idCounter; i++) {
-    //     let node = root.first(node => node.model.id === i);
-    //     console.log(`${node.model.value}, ${node.model.level}, ${node.model.cost}`);
-    //     counter++;
-    // }
+    for (let i = 1; i <= idCounter; i++) {
+        let node = root.first(node => node.model.id === i);
+        console.log(`${node.model.value}, ${node.model.level}, ${node.model.cost}`);
+        counter++;
+    }
 </script>
 
 </html>
