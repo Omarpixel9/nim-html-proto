@@ -14,59 +14,70 @@
 </body>
 <script src="TreeModel.js"></script>
 <script>
-    tree = new TreeModel();
+let tree = new TreeModel();
     
-// Constructing a tree
-// Create root node and first children
-let numOfPieces = 15;
-let root = tree.parse({value: numOfPieces, cost:0, level: 0, children:[{value: numOfPieces-3, cost:0, level: 0}, {value: numOfPieces-2, cost:0, level: 0}, {value: numOfPieces-3, cost: 0, level: 0}]});
-
-// Traverse tree for each node and create its children
-root.walk(function (node) {
-    // Halt the traversal by returning false
-    if (node !== root) {
+    // Constructing a tree
+    // Create root node and first children
+    let numOfPieces = 15;
+    let idCounter = 0;
+    let root = tree.parse({value: numOfPieces, cost:0, level: 0, id: ++idCounter, children:[{value: numOfPieces-3, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-2, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-1, cost: 0, level: 0, id: ++idCounter}]});
+    
+    for (let i = 2; i <= idCounter; i++) {
+        let node = root.first(node => node.model.id === i);
         if (node.model.value - 3 >= 0) {
-            let child = tree.parse({value: node.model.value - 3, cost:0, level: 0});
-            node.addChild(child);
-        }
-        if (node.model.value - 2 >= 0) {
-            let child = tree.parse({value: node.model.value - 2, cost:0, level: 0});
-            node.addChild(child);
-        }
-        if (node.model.value - 1 >= 0) {
-            let child = tree.parse({value: node.model.value - 1, cost:0, level: 0});
-            node.addChild(child);
-        } 
+                let child = tree.parse({value: node.model.value - 3, cost:0, level: 0, id: ++idCounter});
+                node.addChild(child);
+            }
+            if (node.model.value - 2 >= 0) {
+                let child = tree.parse({value: node.model.value - 2, cost:0, level: 0, id: ++idCounter});
+                node.addChild(child);
+            }
+            if (node.model.value - 1 >= 0) {
+                let child = tree.parse({value: node.model.value - 1, cost:0, level: 0, id: ++idCounter});
+                node.addChild(child);
+            }
     }
-});
-
-let lvl = 1;
-let temp = 0;
-root.walk({strategy: 'breadth'}, function (node) {
+    // Traverse tree for each node and create its children    
     
-    if( node == root ){
-        node.model.level = lvl;
-        lvl = lvl +1;
-        temp = node.model.value;
-    }else{
-        if( node.model.value == temp-1 ){
+    let lvl = 1;
+    let temp = 0;
+
+    for (let i = 1; i <= idCounter; i++) {
+        let node = root.first(node => node.model.id === i);
+        // console.log(node.model.id);
+
+        if( node == root ){
             node.model.level = lvl;
-            lvl = lvl+1
+            lvl = lvl +1;
             temp = node.model.value;
         }else{
-            node.model.level = lvl;
+            if( node.model.value == temp-1 ){
+                node.model.level = lvl;
+                lvl = lvl+1
+                temp = node.model.value;
+            }else{
+                node.model.level = lvl;
+            }
         }
+        
     }
-    
-});
 
-lvl = lvl - 1;
-while( lvl >= 1 ){
+    lvl = lvl - 1;
+    while( lvl >= 1 ){
+        for (let i = 1; i <= idCounter; i++) {
+        let node = root.first(node => node.model.id === i);
+        let hasChildren = typeof node.model.children !== "undefined";
 
-    root.walk({strategy: 'breadth'}, function (node) {
         if( node.model.level == lvl ){
-            
-            if( node.model.value == 0 ){
+            if (hasChildren) {
+                let childrenOfRoot = node.model.children;
+                let sumOfChildren = 0;
+                for( let i = 0; i < childrenOfRoot.length; i++ ){
+                    sumOfChildren += childrenOfRoot[i].cost;
+                }
+                node.model.cost = sumOfChildren/childrenOfRoot.length;
+            } else {
+                if( node.model.value == 0 ){
                 if( node.model.level%2 == 0 ){
                     node.model.cost = 1;
                 }else{
@@ -78,24 +89,76 @@ while( lvl >= 1 ){
                 }else{
                     node.model.cost = 1;
                 }
-            }else{
-                let childrenOfRoot = node.model.children;
-                let sumOfChildren = 0;
-                for( let i = 0; i < childrenOfRoot.length; i++ ){
-                    sumOfChildren += childrenOfRoot[i].cost;
-                }
-                node.model.cost = sumOfChildren/childrenOfRoot.length;
+            }
             }
             
+            
         }
-    });
+    }
     lvl = lvl - 1;
 }
+    
+    // root.walk({strategy: 'breadth'}, function (node) {
+        
+        // if( node == root ){
+        //     node.model.level = lvl;
+        //     lvl = lvl +1;
+        //     temp = node.model.value;
+        // }else{
+        //     if( node.model.value == temp-1 ){
+        //         node.model.level = lvl;
+        //         lvl = lvl+1
+        //         temp = node.model.value;
+        //     }else{
+        //         node.model.level = lvl;
+        //     }
+        // }
+        
+    // });
+    
+    // lvl = lvl - 1;
+    // while( lvl >= 1 ){
+    
+    //     root.walk({strategy: 'breadth'}, function (node) {
+    //         if( node.model.level == lvl ){
+                
+    //             if( node.model.value == 0 ){
+    //                 if( node.model.level%2 == 0 ){
+    //                     node.model.cost = 1;
+    //                 }else{
+    //                     node.model.cost = 0;
+    //                 }
+    //             }else if( node.model.value == 1 ){
+    //                 if( node.model.level%2 == 0 ){
+    //                     node.model.cost = 0;
+    //                 }else{
+    //                     node.model.cost = 1;
+    //                 }
+    //             }else{
+    //                 let childrenOfRoot = node.model.children;
+    //                 let sumOfChildren = 0;
+    //                 for( let i = 0; i < childrenOfRoot.length; i++ ){
+    //                     sumOfChildren += childrenOfRoot[i].cost;
+    //                 }
+    //                 node.model.cost = sumOfChildren/childrenOfRoot.length;
+    //             }
+                
+    //         }
+    //     });
+    //     lvl = lvl - 1;
+    // }
+    // root.walk({strategy: 'breadth'},function (node) {
+    //     // Halt the traversal by returning false
+    //     console.log(node.model.value+' '+node.model.cost);
+    
+    // });
 
-root.walk({strategy: 'breadth'},function (node) {
-    // Halt the traversal by returning false
-    console.log(node.model.value+' '+node.model.level+' '+node.model.cost);
-});
+    let counter = 0;
+    // for (let i = 1; i <= idCounter; i++) {
+    //     let node = root.first(node => node.model.id === i);
+    //     console.log(`${node.model.value}, ${node.model.level}, ${node.model.cost}`);
+    //     counter++;
+    // }
 </script>
 
 </html>
