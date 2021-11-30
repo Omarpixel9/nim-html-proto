@@ -14,7 +14,6 @@
 </body>
 <script src="TreeModel.js"></script>
 <script>
-// var TreeModel = require('tree-model'),
     tree = new TreeModel();
     
 // Constructing a tree
@@ -60,18 +59,43 @@ root.walk({strategy: 'breadth'}, function (node) {
     }
     
 });
-//console.log(root.model)
 
-// root.walk({strategy: 'breadth'},function (node) {
-//     // Halt the traversal by returning false
-//     console.log(node.model.value+ ' ' +node.model.level)
-// });
-let childrenOfRoot = root.children;
-let sumOfChildren = 0;
-for (let i = 0; i < childrenOfRoot.length; i++) {
-    sumOfChildren += childrenOfRoot[i].model.cost;
+lvl = lvl - 1;
+while( lvl >= 1 ){
+
+    root.walk({strategy: 'breadth'}, function (node) {
+        if( node.model.level == lvl ){
+            
+            if( node.model.value == 0 ){
+                if( node.model.level%2 == 0 ){
+                    node.model.cost = 1;
+                }else{
+                    node.model.cost = 0;
+                }
+            }else if( node.model.value == 1 ){
+                if( node.model.level%2 == 0 ){
+                    node.model.cost = 0;
+                }else{
+                    node.model.cost = 1;
+                }
+            }else{
+                let childrenOfRoot = node.model.children;
+                let sumOfChildren = 0;
+                for( let i = 0; i < childrenOfRoot.length; i++ ){
+                    sumOfChildren += childrenOfRoot[i].cost;
+                }
+                node.model.cost = sumOfChildren/childrenOfRoot.length;
+            }
+            
+        }
+    });
+    lvl = lvl - 1;
 }
-console.log(sumOfChildren);
+
+root.walk({strategy: 'breadth'},function (node) {
+    // Halt the traversal by returning false
+    console.log(node.model.value+' '+node.model.level+' '+node.model.cost);
+});
 </script>
 
 </html>
