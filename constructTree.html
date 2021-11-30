@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="nim.css">
+    <title>Nim Game Proto</title>
+</head>
+
+<body>
+
+</body>
+<script src="TreeModel.js"></script>
+<script>
+var tree = new TreeModel();
+    
+// Constructing a tree
+// Create root node and first children
+let root = tree.parse({value: 5, cost:0, children: [{value: 2, cost:0}, {value: 3, cost:0}, {value: 4, cost: 0}]});
+
+// Traverse tree for each node and create its children
+root.walk(function (node) {
+    // Halt the traversal by returning false
+    if (node !== root) {
+        if (node.model.value - 3 >= 0) {
+            let child = tree.parse({value: node.model.value - 3, cost:0});
+            node.addChild(child);
+        }
+        if (node.model.value - 2 >= 0) {
+            let child = tree.parse({value: node.model.value - 2, cost:0});
+            node.addChild(child);
+        }
+        if (node.model.value - 1 >= 0) {
+            let child = tree.parse({value: node.model.value - 1, cost:0});
+            node.addChild(child);
+        }    
+    }
+});
+
+// Calculate cost for each node
+</script>
+
+</html>

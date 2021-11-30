@@ -148,10 +148,6 @@ function startGame() {
     switchTurn(firstTurn);
     if (firstTurn !== 'user') playCPURound();
 }
-// Prompt user whether to start the game or the AI to start
-function promptUserBeginning() {
-    
-}
 
 mainMenu();
 
