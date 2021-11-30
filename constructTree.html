@@ -14,32 +14,64 @@
 </body>
 <script src="TreeModel.js"></script>
 <script>
-var tree = new TreeModel();
+// var TreeModel = require('tree-model'),
+    tree = new TreeModel();
     
 // Constructing a tree
 // Create root node and first children
-let root = tree.parse({value: 5, cost:0, children: [{value: 2, cost:0}, {value: 3, cost:0}, {value: 4, cost: 0}]});
+
+let root = tree.parse({value: 5, cost:0, level: 0, children:[{value: 2, cost:0, level: 0}, {value: 3, cost:0, level: 0}, {value: 4, cost: 0, level: 0}]});
 
 // Traverse tree for each node and create its children
 root.walk(function (node) {
     // Halt the traversal by returning false
     if (node !== root) {
         if (node.model.value - 3 >= 0) {
-            let child = tree.parse({value: node.model.value - 3, cost:0});
+            let child = tree.parse({value: node.model.value - 3, cost:0, level: 0});
             node.addChild(child);
         }
         if (node.model.value - 2 >= 0) {
-            let child = tree.parse({value: node.model.value - 2, cost:0});
+            let child = tree.parse({value: node.model.value - 2, cost:0, level: 0});
             node.addChild(child);
         }
         if (node.model.value - 1 >= 0) {
-            let child = tree.parse({value: node.model.value - 1, cost:0});
+            let child = tree.parse({value: node.model.value - 1, cost:0, level: 0});
             node.addChild(child);
-        }    
+        } 
     }
 });
 
-// Calculate cost for each node
+let lvl = 1;
+let temp = 0;
+root.walk({strategy: 'breadth'}, function (node) {
+    
+    if( node == root ){
+        node.model.level = lvl;
+        lvl = lvl +1;
+        temp = node.model.value;
+    }else{
+        if( node.model.value == temp-1 ){
+            node.model.level = lvl;
+            lvl = lvl+1
+            temp = node.model.value;
+        }else{
+            node.model.level = lvl;
+        }
+    }
+    
+});
+//console.log(root.model)
+
+// root.walk({strategy: 'breadth'},function (node) {
+//     // Halt the traversal by returning false
+//     console.log(node.model.value+ ' ' +node.model.level)
+// });
+let childrenOfRoot = root.children;
+let sumOfChildren = 0;
+for (let i = 0; i < childrenOfRoot.length; i++) {
+    sumOfChildren += childrenOfRoot[i].model.cost;
+}
+console.log(sumOfChildren);
 </script>
 
 </html>
