@@ -5,12 +5,18 @@ const piecesLabel = document.querySelector('#pieces-label');
 let numberOfPieces = 15;
 let firstTurn = 'user'; // "user" vs "AI"
 
+// Search Tree Function Skeleton
+function getPiecesToTake(numOfPieces) {
+    let numOfPiecesToTake = -1;
+    return numOfPiecesToTake;
+}
+
 function playCPURound() {
     turnLabel.textContent = 'Please wait, it is AI\'s turn!'
     setTimeout(function () {
         let taken;
         do {
-            taken = Math.floor(Math.random() * 10 / 2);
+            taken = Math.floor(Math.random() * 10 / 2); // SEARCH TECHNIQUE FUNC HERE
         } while (taken > numberOfPieces || taken > 3 || taken < 1);
         turnLabel.textContent = `AI takes ${taken} pieces.`;
         numberOfPieces -= taken;
