@@ -4,6 +4,7 @@ const turnLabel = document.querySelector('#turn-label');
 const piecesLabel = document.querySelector('#pieces-label');
 let numberOfPieces = 15;
 let firstTurn = 'user'; // "user" vs "AI"
+// Tree related vars
 let tree = new TreeModel();
 let root = -1;
 
@@ -114,7 +115,7 @@ console.log(root.model);
 
 }
 
-// Search Tree Function Skeleton
+// Search Tree Function
 function getPiecesToTake(numOfPieces) {
     if (numOfPieces === 1) {
         return 1;
