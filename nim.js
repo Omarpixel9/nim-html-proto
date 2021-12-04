@@ -264,24 +264,32 @@ function mainMenu() {
 }
 
 function startGame() {
+    const loadingText = document.createElement('h1');
+    loadingText.id = 'loadingText';
+    loadingText.textContent = 'Loading...';
+    document.body.appendChild(loadingText);
+
     // Construct the search tree
-    constructTree(firstTurn, numberOfPieces);
-    // Show game related elements
-    pile_container.style.display = 'flex';
-    piecesLabel.style.display = 'inline';
-    turnLabel.style.display = 'inline';
-    buttons = Array.from(document.querySelectorAll('#buttons-container'));
-    buttons.forEach(button => button.style.display = 'block');
+    setTimeout(function () {
+        document.body.querySelector('#loadingText').style.display = 'none';
+        constructTree(firstTurn, numberOfPieces);
+        // Show game related elements
+        pile_container.style.display = 'flex';
+        piecesLabel.style.display = 'inline';
+        turnLabel.style.display = 'inline';
+        buttons = Array.from(document.querySelectorAll('#buttons-container'));
+        buttons.forEach(button => button.style.display = 'block');
 
-    // Hide main menu elements
-    (document.querySelector('#main-menu')).style.display = 'none';
+        // Hide main menu elements
+        (document.querySelector('#main-menu')).style.display = 'none';
 
-    updatePiecesCounter(numberOfPieces);
-    visualizePile(numberOfPieces);
-    addEventListenersToButtons();
+        updatePiecesCounter(numberOfPieces);
+        visualizePile(numberOfPieces);
+        addEventListenersToButtons();
 
-    switchTurn(firstTurn);
-    if (firstTurn !== 'user') playCPURound();
+        switchTurn(firstTurn);
+        if (firstTurn !== 'user') playCPURound();
+    }, 50);
 }
 
 mainMenu();
