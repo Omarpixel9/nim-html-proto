@@ -5,6 +5,7 @@ const piecesLabel = document.querySelector('#pieces-label');
 let numberOfPieces = 5;
 let firstTurn = 'user'; // "user" vs "AI"
 let tree = new TreeModel();
+let root = -1;
 
 function constructTree(firstTurn, numOfPieces) {
     // Constructing a tree
@@ -15,7 +16,7 @@ function constructTree(firstTurn, numOfPieces) {
     
     
     // Traverse tree for each node and create its children    
-    let root = tree.parse({value: numOfPieces, cost:0, level: 0, id: ++idCounter, children:[{value: numOfPieces-3, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-2, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-1, cost: 0, level: 0, id: ++idCounter}]});
+    root = tree.parse({value: numOfPieces, cost:0, level: 0, id: ++idCounter, children:[{value: numOfPieces-3, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-2, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-1, cost: 0, level: 0, id: ++idCounter}]});
     
     for (let i = 2; i <= idCounter; i++) {
         let node = root.first(node => node.model.id === i);
