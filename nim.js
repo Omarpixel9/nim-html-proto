@@ -2,7 +2,7 @@ const pile_container = document.querySelector('#pieces-container');
 const button_container = document.querySelector('#buttons-container');
 const turnLabel = document.querySelector('#turn-label');
 const piecesLabel = document.querySelector('#pieces-label');
-let numberOfPieces = 5;
+let numberOfPieces = 15;
 let firstTurn = 'user'; // "user" vs "AI"
 let tree = new TreeModel();
 let root = -1;
@@ -116,8 +116,32 @@ console.log(root.model);
 
 // Search Tree Function Skeleton
 function getPiecesToTake(numOfPieces) {
-    let numOfPiecesToTake = -1;
+    if (numOfPieces === 1) {
+        return 1;
+    } else {
+        let numOfPiecesToTake = -1;
+    let myNode = root.first(function(node) {
+        if (firstTurn === 'user') {
+            return node.model.value === numOfPieces && node.model.level % 2 === 0
+        } else if (firstTurn === 'AI') {
+            return node.model.value === numOfPieces && node.model.level % 2 !== 0
+        }
+    });
+    let maxCost = 0;
+    let maxIndex = -1;
+    console.log(myNode);
+    for (let i = 0; i < myNode.children.length; i++) {
+        if (myNode.children[i].model.cost > maxCost) {
+            maxCost = myNode.children[i].model.cost;
+            console.log(maxCost);
+            maxIndex = i;
+        }
+    }
+    numOfPiecesToTake = numOfPieces - myNode.children[maxIndex].model.value;
+    console.log(numOfPieces + ", " + numOfPiecesToTake + ", " + maxCost);
     return numOfPiecesToTake;
+    }
+    
 }
 
 function playCPURound() {
@@ -125,7 +149,7 @@ function playCPURound() {
     setTimeout(function () {
         let taken;
         do {
-            taken = Math.floor(Math.random() * 10 / 2); // SEARCH TECHNIQUE FUNC HERE
+            taken = getPiecesToTake(numberOfPieces) // SEARCH TECHNIQUE FUNC HERE
         } while (taken > numberOfPieces || taken > 3 || taken < 1);
         turnLabel.textContent = `AI takes ${taken} pieces.`;
         numberOfPieces -= taken;
@@ -240,6 +264,8 @@ function mainMenu() {
 }
 
 function startGame() {
+    // Construct the search tree
+    constructTree(firstTurn, numberOfPieces);
     // Show game related elements
     pile_container.style.display = 'flex';
     piecesLabel.style.display = 'inline';
@@ -258,7 +284,6 @@ function startGame() {
     if (firstTurn !== 'user') playCPURound();
 }
 
-// constructTree(firstTurn, numberOfPieces);
 mainMenu();
 
 player1_button = document.querySelector('#player1');
