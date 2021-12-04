@@ -2,8 +2,116 @@ const pile_container = document.querySelector('#pieces-container');
 const button_container = document.querySelector('#buttons-container');
 const turnLabel = document.querySelector('#turn-label');
 const piecesLabel = document.querySelector('#pieces-label');
-let numberOfPieces = 15;
+let numberOfPieces = 5;
 let firstTurn = 'user'; // "user" vs "AI"
+let tree = new TreeModel();
+
+function constructTree(firstTurn, numOfPieces) {
+    // Constructing a tree
+    // Create root node and first children
+    let idCounter = 0;
+    let initialTime = (new Date()).getTime() / 1000;
+    console.log((new Date()).getTime() / 1000 - initialTime);
+    
+    
+    // Traverse tree for each node and create its children    
+    let root = tree.parse({value: numOfPieces, cost:0, level: 0, id: ++idCounter, children:[{value: numOfPieces-3, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-2, cost:0, level: 0, id: ++idCounter}, {value: numOfPieces-1, cost: 0, level: 0, id: ++idCounter}]});
+    
+    for (let i = 2; i <= idCounter; i++) {
+        let node = root.first(node => node.model.id === i);
+        if (node.model.value - 3 >= 0) {
+                let child = tree.parse({value: node.model.value - 3, cost:0, level: 0, id: ++idCounter});
+                node.addChild(child);
+            }
+            if (node.model.value - 2 >= 0) {
+                let child = tree.parse({value: node.model.value - 2, cost:0, level: 0, id: ++idCounter});
+                node.addChild(child);
+            }
+            if (node.model.value - 1 >= 0) {
+                let child = tree.parse({value: node.model.value - 1, cost:0, level: 0, id: ++idCounter});
+                node.addChild(child);
+            }
+    }
+    
+    // Put the entire tree into an array
+    let treeArray = [];
+    for (let i = 1; i <= idCounter; i++) {
+        let node = root.first(node => node.model.id === i);
+        treeArray.push(node);
+    }
+    // console.log(treeArray);
+    console.log((new Date()).getTime() / 1000 - initialTime);
+
+    // Set the level for each node (root node is level 1)
+    let lvl = 1;
+    let temp = 0;
+    for (let i = 1; i <= idCounter; i++) {
+        let node = treeArray[i - 1];
+        // console.log(node.model.id);
+
+        if( node == root ){
+            node.model.level = lvl;
+            lvl = lvl +1;
+            temp = node.model.value;
+        }else{
+            if( node.model.value == temp-1 ){
+                node.model.level = lvl;
+                lvl = lvl+1
+                temp = node.model.value;
+            }else{
+                node.model.level = lvl;
+            }
+        }
+        
+    }
+
+    console.log((new Date()).getTime() / 1000 - initialTime);
+
+    // Calculate the cost based on the turn
+    lvl = lvl - 1;
+    while( lvl >= 1 ){
+        for (let i = 1; i <= idCounter; i++) {
+        let node = treeArray[i - 1];
+        let hasChildren = typeof node.model.children !== "undefined";
+
+        if( node.model.level == lvl ){
+            if (hasChildren) {
+                let childrenOfRoot = node.model.children;
+                let sumOfChildren = 0;
+                for( let i = 0; i < childrenOfRoot.length; i++ ){
+                    sumOfChildren += childrenOfRoot[i].cost;
+                }
+                node.model.cost = sumOfChildren/childrenOfRoot.length;
+            } else {
+                if( node.model.value == 0 ){
+                if( node.model.level%2 == 0 ){
+                    if (firstTurn === 'user') node.model.cost = 1;
+                    else node.model.cost = 0;
+                }else{
+                    if (firstTurn === 'user') node.model.cost = 0;
+                    else node.model.cost = 1;
+                }
+            }else if( node.model.value == 1 ){
+                if( node.model.level%2 == 0 ){
+                    if (firstTurn === 'user') node.model.cost = 0;
+                    else node.model.cost = 1;
+                }else{
+                    if (firstTurn === 'user') node.model.cost = 1;
+                    else node.model.cost = 0;
+                }
+            }
+            }
+            
+            
+        }
+    }
+    lvl = lvl - 1;
+}
+
+console.log((new Date()).getTime() / 1000 - initialTime);
+console.log(root.model);
+
+}
 
 // Search Tree Function Skeleton
 function getPiecesToTake(numOfPieces) {
@@ -149,6 +257,7 @@ function startGame() {
     if (firstTurn !== 'user') playCPURound();
 }
 
+// constructTree(firstTurn, numberOfPieces);
 mainMenu();
 
 player1_button = document.querySelector('#player1');
@@ -173,4 +282,3 @@ AI_button.addEventListener('click', function () {
 start_button = document.querySelector('#startGame');
 start_button.addEventListener('click', startGame);
 start_button.disabled = true;
-// game(numberOfPieces);
